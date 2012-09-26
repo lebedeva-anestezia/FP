@@ -182,7 +182,7 @@ n .-. m = n .+. (intNeg m)
 infixl 7 .*.
 (.*.) :: Int -> Int -> Int
 (Pos n) .*. (Pos m) = Pos $ n *. m
-(Pos n) .*. (Neg m) = Neg $ n *. (Succ m)
+(Pos n) .*. (Neg m) = intNeg . Pos $ n *. (Succ m)
 (Neg n) .*. (Neg m) = Pos $ (Succ n) *. (Succ m)
 (Neg n) .*. (Pos m) = (Pos m) .*. (Neg n)
 
