@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module ITMOPrelude.Primitive where
 
-import Prelude (Show,Read)
+import Prelude (Show,Read,error)
 
 ---------------------------------------------
 -- Синтаксис лямбда-выражений
@@ -123,6 +123,7 @@ Zero     *. m = Zero
 
 -- Целое и остаток от деления n на m
 natDivMod :: Nat -> Nat -> Pair Nat Nat
+natDivMod n Zero = error "division by zero"
 natDivMod n m = if' (natLt n m) (Pair Zero n) (Pair (Succ $ natDiv (n -. m) m) (natMod (n -. m) m))
 
 natDiv n = fst . natDivMod n -- Целое
@@ -131,6 +132,7 @@ natMod n = snd . natDivMod n -- Остаток
 
 -- Поиск GCD алгоритмом Евклида (должен занимать 2 (вычислителельная часть) + 1 (тип) строчки)
 gcd :: Nat -> Nat -> Nat
+gcd Zero Zero = error "gcd for zero zero"
 gcd n Zero = n
 gcd n (Succ m) = gcd (Succ m) (natMod n (Succ m))
 
@@ -196,7 +198,7 @@ ratNeg (Rat x y) = Rat (intNeg x) y
 
 -- У рациональных ещё есть обратные элементы
 ratInv :: Rat -> Rat
---ratInv (Rat (Pos Zero) _) = error "No inverce element for zero"
+ratInv (Rat (Pos Zero) _) = error "No inverse element for zero"
 ratInv (Rat (Pos n) m) = Rat (Pos m) n 
 ratInv (Rat (Neg n) m) = Rat (intNeg (Pos m)) (Succ n)
 
