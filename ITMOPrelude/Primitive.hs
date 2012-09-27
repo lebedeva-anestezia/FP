@@ -188,6 +188,19 @@ infixl 7 .*.
 (Neg n) .*. (Neg m) = Pos $ (Succ n) *. (Succ m)
 (Neg n) .*. (Pos m) = (Pos m) .*. (Neg n)
 
+-- абсолютное значение
+abs :: Int -> Nat
+abs (Pos n) = n
+abs (Neg n) = Succ n
+
+-- целочисленное деление
+intDiv :: Int -> Int -> Int
+intDiv n (Pos Zero) = error "division by zero"
+intDiv (Pos n) (Pos (Succ m)) = Pos $ natDiv n (Succ m)
+intDiv (Neg n) (Pos (Succ m)) = intNeg (Pos $ natDiv (Succ n) (Succ m))
+intDiv (Pos n) (Neg m) = intDiv (intNeg $ Pos n) (Pos $ Succ m)
+intDiv (Neg n) (Neg m) = intDiv (Pos $ Succ n) (Pos $ Succ m)
+
 -------------------------------------------
 -- Рациональные числа
 
@@ -214,17 +227,22 @@ ratLt (Rat n m) (Rat a b) = intLt (n .*. (Pos b)) (a .*. (Pos m))
 
 infixl 7 %+, %-
 (%+) :: Rat -> Rat -> Rat
-(Rat n m) %+ (Rat a b) = Rat ((n .*. (Pos b)) .+. (a .*. (Pos m))) (m *. b)
+(Rat n m) %+ (Rat a b) = simpleFrac $ Rat ((n .*. (Pos b)) .+. (a .*. (Pos m))) (m *. b)
 
 (%-) :: Rat -> Rat -> Rat
 n %- m = n %+ (ratNeg m)
 
 infixl 7 %*, %/
 (%*) :: Rat -> Rat -> Rat
-(Rat n m) %* (Rat a b) = Rat (n .*. a) (m *. b)
+(Rat n m) %* (Rat a b) = simpleFrac $ Rat (n .*. a) (m *. b)
 
 (%/) :: Rat -> Rat -> Rat
 n %/ m = n %* (ratInv m)
+
+-- Сокращение дроби
+simpleFrac :: Rat -> Rat
+simpleFrac (Rat n m) = Rat (intDiv n (Pos g)) (natDiv m g) 
+			where g = gcd (abs n) m
 
 -------------------------------------------
 -- Операции над функциями.
