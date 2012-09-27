@@ -7,32 +7,32 @@ import Prelude (Show,Read,error)
 
 data Tree a = Leaf | Node a (Tree a) (Tree a) deriving (Show,Read)
 
--- ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ð¿ÑƒÑÑ‚Ð¾Ð³Ð¾ Ð´ÐµÑ€ÐµÐ²Ð°
+-- ñîçäàíèå ïóñòîãî äåðåâà
 createTree :: Tree a
 createTree = Leaf
 
--- Ð²ÑÑ‚Ð°Ð²ÐºÐ° ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð° Ð² Ð²ÐµÑ€ÑˆÐ¸Ð½Ñƒ
+-- âñòàâêà ýëåìåíòà â âåðøèíó
 insertToNode :: Tree a -> a -> Tree a
 insertToNode Leaf x = Node x Leaf Leaf
 insertToNode (Node n l r) x = Node x l r
 
--- Ð²ÑÑ‚Ð°Ð²ÐºÐ° ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð° Ð² ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ðµ ÑÐ°Ð¼Ð¾Ð³Ð¾ Ð»ÐµÐ²Ð¾Ð³Ð¾
+-- âñòàâêà ýëåìåíòà â êà÷åñòâå ñàìîãî ëåâîãî
 insertToLeft :: Tree a -> a -> Tree a
 insertToLeft Leaf x = Node x Leaf Leaf
 insertToLeft (Node n l r) x = insertToLeft l x
-                                              
--- Ð²ÑÑ‚Ð°Ð²ÐºÐ° ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð° Ð² ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ðµ ÑÐ°Ð¼Ð¾Ð³Ð¾ Ð¿Ñ€Ð°Ð²Ð¾Ð³Ð¾
+
+-- âñòàâêà ýëåìåíòà â êà÷åñòâå ñàìîãî ïðàâîãî
 insertToRight :: Tree a -> x -> Tree a
 insertToRigth Leaf x = Node x Leaf Leaf
 insertToRight (Node n l r) x = insertToRight r x
 
--- Ð»ÐµÐ²Ñ‹Ð¹ Ð¿Ð¾Ð²Ð¾Ñ€Ð¾Ñ‚
+-- ëåâûé ïîâîðîò
 leftRotation :: Tree a -> Tree a
 leftRotation Leaf = Leaf
 leftRotation (Node n l Leaf) = Node n l Leaf
 leftRotation (Node n l (Node r rl ll)) = Node r (Node n l rl) ll
 
--- Ð¿Ñ€Ð°Ð²Ñ‹Ð¹ Ð¿Ð¾Ð²Ð¾Ñ€Ð¾Ñ‚
+-- ïðàâûé ïîâîðîò
 rightRotation :: Tree a -> Tree a
 rightRotation Leaf = Leaf
 rightRotation (Node n Leaf r) = Node n Leaf r
@@ -44,3 +44,6 @@ map f Leaf = Leaf
 map f (Node a l r) = Node (f a) (map f l) (map f r)
 
 -- foldr
+foldr :: (a -> b -> b) -> b -> Tree a -> b
+foldr f z Leaf = z
+foldr f z (Node a l r) = foldr f (f a (foldr f z r)) l
