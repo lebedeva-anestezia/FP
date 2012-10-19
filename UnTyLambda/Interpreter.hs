@@ -57,23 +57,66 @@ betaReduct (Lam v t) var what 	| var == v 			= Lam v t
 -- то следует бросать error, тестер его поймает):
 
 wh, no, wa, sa :: Integer -> Term -> Term
+                                                 
 
 -- Редукция аппликативным порядком
 sa 0 t = error $ "Too long sequence at [" ++ show t ++ "]"
-sa n (Var v) 		= Var v
-sa n (Lam var term) 	= Lam var (sa (n - 1) term)
---sa n (App t1 t2) 	= let r2 = sa (n - 1) t2
---	case r@(sa (n - 1) t1) of
---		Var v		-> App (Var v) r2
---		Lam var term	-> betaReduct term var r2
---		(_)             -> App r r2
+sa n t = if fst rec
+		then sa (n - 1) (snd rec)
+		else snd rec
+			where rec = sa' t
+
+
+sa' :: Term -> (Bool, Term)                            
+sa' (Lam var term) 		= (fst rec, Lam var (snd rec))
+					where rec = sa' term
+sa' (App (Lam var term) l)	= if fst rec 
+					then (True, App (Lam var (snd rec)) l) 
+					else (True, betaReduct term var l)
+						where rec = sa' term
+sa' (App t1 t2)			= if fst rec1
+					then (True, App (snd rec1) t2)
+					else (fst rec2, App t1 (snd rec2))
+						where 	rec1 = sa' t1
+							rec2 = sa' t2	
+sa' term			= (False, term)
 
 
 -- Нормализация нормальным порядком
-no = undefined
+no 0 t = error $ "Too long sequence at [" ++ show t ++ "]"
+no n t = if fst rec
+		then no (n - 1) (snd rec)
+		else snd rec
+			where rec = no' t
+
+
+no' :: Term -> (Bool, Term)
+no' (Lam var term) 		= (fst rec, Lam var (snd rec))
+					where rec = no' term
+no' (App (Lam var term) l) 	= (True, betaReduct term var l)
+no' (App t1 t2)			= if fst rec1
+					then (True, App (snd rec1) t2)
+					else (fst rec2, App t1 (snd rec2))
+						where 	rec1 = no' t1
+							rec2 = no' t2	
+no' term			= (False, term)
 
 -- Редукция в слабую головную нормальную форму
-wh = undefined
+wh 0 t = error $ "Too long sequence at [" ++ show t ++ "]"
+wh n t = if fst rec
+		then wh (n - 1) (snd rec)
+		else snd rec
+			where rec = wh' t
+
+
+wh' :: Term -> (Bool, Term)
+wh' (App (Lam var term) l) 	= (True, betaReduct term var l)
+wh' (App t1 t2)			= if fst rec1
+					then (True, App (snd rec1) t2)
+					else (fst rec2, App t1 (snd rec2))
+						where 	rec1 = no' t1
+							rec2 = no' t2	
+wh' term			= (False, term)
 
 -- (*) (не обязательно) Редукция "слабым" аппликативным порядком.
 -- Отличается от обычного аппликативного тем, что не лезет внутрь
