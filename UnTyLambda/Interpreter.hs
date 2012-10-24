@@ -114,14 +114,30 @@ wh' (App (Lam var term) l) 	= (True, betaReduct term var l)
 wh' (App t1 t2)			= if fst rec1
 					then (True, App (snd rec1) t2)
 					else (fst rec2, App t1 (snd rec2))
-						where 	rec1 = no' t1
-							rec2 = no' t2	
+						where 	rec1 = wh' t1
+							rec2 = wh' t2	
 wh' term			= (False, term)
 
 -- (*) (не обязательно) Редукция "слабым" аппликативным порядком.
 -- Отличается от обычного аппликативного тем, что не лезет внутрь
 -- лямбд и правые части аппликаций, когда это возможно.
-wa = undefined
+
+wa 0 t = error $ "Too long sequence at [" ++ show t ++ "]"
+wa n t = if fst rec
+		then sa (n - 1) (snd rec)
+		else snd rec
+			where rec = sa' t
+
+
+wa' :: Term -> (Bool, Term)    
+                                 
+wa' (App (Lam var term) l)	= (True, betaReduct term var l)
+	
+wa' (App t1 t2)			= (snd rec, App (snd rec) t2)
+					where 	rec = wa' t1
+						
+wa' term			= (False, term)
+
 
 -- Замечание: cкорость работы вашего интерпретатора специально не оценивается,
 -- потому можно использовать свой изоморфный (с точностью до альфа-конверсии)

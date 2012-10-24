@@ -8,7 +8,6 @@ import Prelude(error)
 
 class Category f where
 	arrow :: (a -> b) -> f a b
---	id :: 
 	(.) :: f b c -> f a b -> f a c
                        
 class Functor f where
