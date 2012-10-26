@@ -2,7 +2,6 @@
 module ITMOPrelude.Primitive where
 
 import Prelude (Show,Read,error)
-import ITMOPrelude.Algebra
 
 ---------------------------------------------
 -- Синтаксис лямбда-выражений
@@ -136,12 +135,7 @@ gcd :: Nat -> Nat -> Nat
 gcd Zero Zero = error "gcd for zero zero"
 gcd n Zero = n
 gcd n (Succ m) = gcd (Succ m) (natMod n (Succ m))
-
-instance Monoid Nat where
-	mempty = Zero
- 	mappend = (+.)
-
-
+                        
 -------------------------------------------
 -- Целые числа
 

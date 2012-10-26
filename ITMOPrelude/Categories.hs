@@ -7,11 +7,19 @@ import Prelude(error)
 
 
 class Category f where
-	arrow :: (a -> b) -> f a b
+--	id :: f a a
 	(.) :: f b c -> f a b -> f a c
                        
 class Functor f where
 	fmap :: (a -> b) -> f a -> f b
+
+
+class Monad m where
+	return :: a -> m a	
+	(>>=) :: m a -> (a -> m b) -> m b
+	(>>) :: m a -> m b -> m b
+	x >> y = x >>= \_ -> y 
+
 
 instance Functor List where
 	fmap = map
@@ -19,13 +27,7 @@ instance Functor List where
 instance Functor Tree where 
 	fmap = tmap
 
-
-class Monade m where
-	return :: a -> m a	
-	(>>=) :: m a -> (a -> m b) -> m b
-	(>>) :: m a -> m b -> m b
-	x >> y = x >>= \_ -> y 
-
-instance Monade List where
+                                      
+instance Monad List where
 	return a = Cons a Nil
 	a >>= f = concatMap f a

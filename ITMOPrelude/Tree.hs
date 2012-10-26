@@ -2,8 +2,6 @@
 module ITMOPrelude.Tree where
 
 import Prelude (Show,Read,error)
---import ITMOPrelude.Primitive
---import ITMOPrelude.List
 
 data Tree a = Leaf | Node a (Tree a) (Tree a) deriving (Show,Read)
 
@@ -39,9 +37,9 @@ rightRotation (Node n Leaf r) = Node n Leaf r
 rightRotation (Node n (Node l ll lr) r) = Node l ll (Node n lr r)
 
 -- map
-map :: (a -> b) -> Tree a -> Tree b
-map f Leaf = Leaf
-map f (Node a l r) = Node (f a) (map f l) (map f r)
+tmap :: (a -> b) -> Tree a -> Tree b
+tmap f Leaf = Leaf
+tmap f (Node a l r) = Node (f a) (tmap f l) (tmap f r)
 
 -- foldr
 foldr :: (a -> b -> b) -> b -> Tree a -> b
