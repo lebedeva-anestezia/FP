@@ -49,7 +49,7 @@ instance Monad List where
 newtype State s a = State { runState :: s -> (s, a) }
 
 instance Monad (State s) where
-    return x = State (\s -> (x, s))
+    return x = State (\s -> (s, x))
     (State h) >>= f = State $ \s -> let (newstate, a) = h s
-				(State g) = f a
-			in g newstate	
+					(State g) = f a
+				    in g newstate	
