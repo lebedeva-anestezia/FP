@@ -10,8 +10,8 @@ import ITMOPrelude.Categories.MonadFish
 
 instance MonadJoin m => Monad m where
 	return = returnJoin
-	ma >>= f = join . fmap f ma
+	ma >>= f = join (fmap f ma)
 
 instance MonadJoin m => MonadFish m where
 	returnFish = returnJoin
-	f >=> g = \x -> join . fmap g (f x)
+	f >=> g = \x -> join (fmap g (f x))

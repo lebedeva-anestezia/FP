@@ -9,10 +9,10 @@ import ITMOPrelude.Categories.MonadJoin
 -- делаем из нас
 instance MonadFish m => Monad m where
     return = returnFish
-    ma >>= f = id ma >=> f
+    ma >>= f = (id >=> f) ma
 
 instance MonadFish m => Functor m where
-    fmap f ma = (returnFish . f >=> id) ma
+    fmap f ma = (id >=> (returnFish . f)) ma
 
 instance MonadFish m => MonadJoin m where
     returnJoin = returnFish
