@@ -13,7 +13,7 @@ import Monstupar.Tests
 import Data.List
 import Data.Maybe
 
---ðàçáèâàåì ñòðîêó ïî ïðîáåëàì, àêòèâíî èñïîëüçóÿ íàø Monstupar
+--Ð Ð°Ð·Ð±Ð¸Ð²Ð°ÐµÐ¼ ÑÑ‚Ñ€Ð¾ÐºÑƒ Ð¿Ð¾ Ð¿Ñ€Ð¾Ð±ÐµÐ»Ð°Ð¼, Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÑ Monstupar
 tokenizer :: String -> [String]
 tokenizer str = case runParser wordList str of
 		Right (s, a) -> a
@@ -32,7 +32,7 @@ neighbor s = res where
 	levls = zipWith levenshtein (replicate (length dict) s) dict		
 	dict = ["opa","nya","word","pya"]
 
---ãëàâíàÿ ôóíêöèÿ, ïðèíèìàåò ñòðîêó, êîòîðóþ íóæíî ïðîâåðèòü ïî ñëîâàðþ dict èç ôóíêöèè neighbor
+--Ð³Ð»Ð°Ð²Ð½Ð°Ñ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ, Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÑ‚ Ð²Ñ…Ð¾Ð´Ð½ÑƒÑŽ ÑÑ‚Ñ€Ð¾ÐºÑƒ Ð¿Ð¾ ÑÐ»Ð¾Ð²Ð°Ñ€ÑŽ dict Ð¸Ð· Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ neighbor
 
 main :: String -> [String] 
 main s = map neighbor (tokenizer s)
