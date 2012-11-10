@@ -59,3 +59,16 @@ natListTest = mustFail  ""
           &.& mustFail  "10,20,12,3423,0.,234,234,2342,22342,22232,17583,9573"
           $ natList
 
+
+-- парсер для строк, состоящих из строчных латинский букв и пробелов
+wordList :: Monstupar Char [String]
+wordList = do 	ws  <-  nl
+	        eof
+		return ws
+	where
+	nl = do 
+		w <- word
+		sp <- many (char ' ' >> word)
+		return (w: sp)
+	     where word = many1 letter
+	   	   letter = oneOf ['a'..'z']
